@@ -39,18 +39,15 @@ class ProdukController extends Controller
     {
         // Fetch the product by ID
         $produk = Produk::findOrFail($id);
-    
-        // Get distinct merk and jenis values from the produk table with the same nama_produk
-        $merks = Produk::where('nama_produk', $produk->nama_produk)
-                       ->distinct()
-                       ->pluck('merk'); // Get unique merk values for the same produk name
-    
-        $jenises = Produk::where('nama_produk', $produk->nama_produk)
-                         ->distinct()
-                         ->pluck('jenis'); // Get unique jenis values for the same produk name
-    
+
+        $produkByMerk = Produk::query()
+            ->where('nama_produk', $produk->nama_produk)
+            ->get()
+            ->map(fn($item) => ['merk' => $item->merk, 'jenis' => $item->jenis])
+            ->groupBy(fn($item) => $item['merk']);
+
         // Pass the product, merk, and jenis to the view
-        return view('product', compact('produk', 'merks', 'jenises'));
+        return view('product', compact('produk', 'produkByMerk'));
     }
 
     public function getProductByFilters(Request $request)

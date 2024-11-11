@@ -5,6 +5,7 @@ use App\Models\Cart;
 use App\Models\Produk; 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -65,13 +66,25 @@ class CartController extends Controller
 
 //     return response()->json(['message' => 'Product added to cart!']);
 // }
-public function addToCart(Request $request, $id)
+public function addToCart(Request $request)
 {
+    $request->validate([
+        'merk' => 'required',
+        'jenis' => 'required',
+    ]);
+    
+    $merk = $request->merk;
+    $jenis = $request->jenis;
+
     // Get the product by its ID
-    $produk = Produk::findOrFail($id);
+    $produk = Produk::where('merk', $merk)
+            ->where('jenis', $jenis)
+            ->first(); // Find the first product matching the filters
+
+    $id = $produk->id_produk;
 
     // Get the current authenticated user's ID
-    $userId = auth()->user()->id;
+    $userId = Auth::user()->id;
 
     // Validate the quantity input
     $quantity = $request->input('quantity', 1); // Default to 1 if no quantity is provided

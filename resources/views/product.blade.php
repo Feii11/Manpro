@@ -36,33 +36,30 @@
             </div>
 
             <!-- Merk and Jenis -->
-            <div class="flex items-center space-x-4 mb-4">
-                <div>
-                    <label for="merk" class="block text-sm font-medium">Merk:</label>
-                    <select id="merk" name="merk" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
-                        @foreach($merks as $merk)
-                            <option value="{{ $merk }}" {{ $produk->merk == $merk ? 'selected' : '' }}>
-                                {{ $merk }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
-                    <label for="jenis" class="block text-sm font-medium">Jenis:</label>
-                    <select id="jenis" name="jenis" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
-                        @foreach($jenises as $jenis)
-                            <option value="{{ $jenis }}" {{ $produk->jenis == $jenis ? 'selected' : '' }}>
-                                {{ $jenis }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-            <!-- Add to Cart Button -->
             <form id="addToCartForm" action="{{ route('cart.add', ['id' => $produk->id_produk]) }}" method="POST">
                 @csrf
+
+                <div class="flex items-center space-x-4 mb-4">
+                    <div>
+                        <label for="merk" class="block text-sm font-medium">Merk:</label>
+                        <select id="merk" name="merk" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
+                            <option value="">Pilih...</option>
+                            @foreach($produkByMerk as $merk => $listJenis)
+                                <option value="{{ $merk }}">
+                                    {{ $merk }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="jenis" class="block text-sm font-medium">Jenis:</label>
+                        <select id="jenis" name="jenis" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Add to Cart Button -->
                 <!-- Hidden input to pass the product ID and quantity -->
                 <input type="hidden" name="product_id" value="{{ $produk->id_produk }}">
                 <input type="hidden" id="productQuantity" name="quantity" value="1">
@@ -74,6 +71,18 @@
                 
                 <!-- Submit Button -->
                 <button type="submit" class="mt-4 py-2 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Add to Cart</button>
+                
+                @if ($errors->any())
+                    <div class="mt-2 bg-red-500 text-sm text-white rounded-lg p-4" role="alert" tabindex="-1" aria-labelledby="hs-solid-color-danger-label">
+                        <span id="hs-solid-color-danger-label" class="font-bold">Error</span>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
             </form>
 
             <!-- Product Description -->
@@ -110,6 +119,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    const produkByMerk = @json($produkByMerk);
     
     $(document).ready(function() {
         // Update the form's quantity value when the user changes the quantity input field
@@ -118,57 +128,22 @@
             $('#productQuantity').val(quantity);
         });
 
-        // Update the URL with the selected merk and jenis before submitting the form
-        $('#merk, #jenis').on('change', function() {
-            // Get the selected merk and jenis values
-            var merk = $('#merk').val();
-            var jenis = $('#jenis').val();
+        $('#merk').on('change', function(e) {
+            const merk = $('#merk').val();
 
-            // Send the selected values to the server via AJAX to get the updated product ID
-            $.ajax({
-                url: '{{ route('product.getProductByFilters') }}', // URL to the controller method
-                method: 'GET',
-                data: {
-                    merk: merk,
-                    jenis: jenis
-                },
-                success: function(response) {
-                    // Update the product details on success
-                    $('#product-name').text(response.nama_produk);
-                    $('#product-price').text('Rp. ' + response.harga.toLocaleString()); // Update the price
-                    
-                    // Update the URL with the selected filters and the new product ID
-                    var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?merk=' + merk + '&jenis=' + jenis + '&id=' + response.id;
+            $('#jenis').html('');
 
-                    // Update the browser's address bar without reloading the page
-                    history.pushState({ path: newUrl }, '', newUrl);
+            if (merk == "") return;
 
-                    // Optionally, update the form action URL with the new product ID
-                    $('#addToCartForm').attr('action', '{{ route('cart.add', ['id' => '__ID__']) }}'.replace('__ID__', response.id));
-                },
-                error: function(xhr) {
-                    // Handle errors (e.g., product not found)
-                    alert('An error occurred: ' + xhr.responseJSON.message);
-                }
-            });
-        });
-
-        // Handle form submission
-        $('#addToCartForm').on('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting immediately
-
-            // Get the current URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const merk = urlParams.get('merk');
-            const jenis = urlParams.get('jenis');
-            const productId = urlParams.get('id'); // Get the product id from the URL
-
-            // Update the form action with the current URL parameters
-            const updatedActionUrl = `{{ route('cart.add', ['id' => '__ID__']) }}`.replace('__ID__', productId);
-            this.action = updatedActionUrl;
-
-            // Submit the form
-            this.submit();
+            const jenisForMerk = produkByMerk[merk];
+    
+            for (const x of jenisForMerk) {
+                $('#jenis').append(`
+                    <option value="${x.jenis}">${x.jenis}</option>
+                `)
+            }
         });
     });
+
+
 </script>

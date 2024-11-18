@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthenticateAdmin;
 use App\Http\Middleware\AuthenticateUser;
 use Illuminate\Support\Facades\Auth;
@@ -47,20 +48,28 @@ Route::middleware([AuthenticateUser::class])->group(function () {
 });
 
 // Admin Routes (For Admin Users Only)
-Route::middleware([AuthenticateAdmin::class])->group(function () {
-    Route::get('/admin', [AdminController::class, 'adminhome'])->name('admin.home');
-    Route::get('/admin/products', action: [AdminController::class, 'viewProducts'])->name('admin.products');
-    Route::get('/admin/users', [AdminController::class, 'viewUsers'])->name('admin.users');
-    Route::get('/admin/admins', [AdminController::class, 'viewAdmins'])->name('admin.admins');
-    Route::get('/admin/orders', [AdminController::class, 'viewOrders'])->name('admin.orders');
+Route::prefix('admin')->name('admin.')->middleware([AuthenticateAdmin::class])->group(function () {
+    Route::get('/', [AdminController::class, 'adminhome'])->name('home');
+    Route::get('/products', action: [AdminController::class, 'viewProducts'])->name('products');
+    Route::get('/admins', [AdminController::class, 'viewAdmins'])->name('admins');
+    Route::get('/orders', [AdminController::class, 'viewOrders'])->name('orders');
+    
+    // /users -> Index
+    // /users/create -> Create
+    // /users/{id} -> Show
+    // /users/{id}/edit -> Edit
+    // /users/{id}/update -> Update
+    // /users/{id}/destroy -> Destroy
+    Route::resource('users', UserController::class)->names('users')->except(['show']);
+    Route::resource('admins', AdminController::class)->names('admins')->except(['show']);
 
     // Actions for editing products, users, orders
-    Route::get('/admin/product/add', [AdminController::class, 'addProduct'])->name('admin.product.add');
-    Route::post('/admin/product/add', [AdminController::class, 'storeProduct'])->name('admin.product.store');
-    Route::get('/admin/product/{id}/edit', [AdminController::class, 'editProduct'])->name('admin.product.edit');
-    Route::post('/admin/product/{id}/update', [AdminController::class, 'updateProduct'])->name('admin.product.update');
+    Route::get('/product/add', [AdminController::class, 'addProduct'])->name('product.add');
+    Route::post('/product/add', [AdminController::class, 'storeProduct'])->name('product.store');
+    Route::get('/product/{id}/edit', [AdminController::class, 'editProduct'])->name('product.edit');
+    Route::post('/product/{id}/update', [AdminController::class, 'updateProduct'])->name('product.update');
     // Route::get('/admin/order/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.order.status');
-    Route::post('/admin/order/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.order.status');
+    Route::post('/order/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('order.status');
 });
 
 require __DIR__.'/auth.php';

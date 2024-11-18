@@ -5,9 +5,59 @@ use App\Models\Produk;
 use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    public function index()
+    {
+        $models = User::where('is_admin', 1)->get();
+        return view('admin.admins.index', compact('models'));
+    }
+    
+    public function create()
+    {
+        $model = new User();
+        return view('admin.admins.form', compact('model'));
+    }
+    
+    public function store(Request $request)
+    {
+        $model = new User();
+        $model->name = $request->name;
+        $model->email = $request->email;
+        $model->password = Hash::make($request->password);
+        $model->is_admin = 1;
+        $model->save();
+        return redirect()->route('admin.admins.index')->with('success', 'Admin created successfully');
+    }
+    
+    public function edit($id)
+    {
+        $model = User::where('is_admin', 1)->findOrFail($id);
+        return view('admin.admins.form', compact('model'));
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $model = User::where('is_admin', 1)->findOrFail($id);
+        $model->name = $request->name;
+        $model->email = $request->email;
+        if ($request->password) {
+            $model->password = Hash::make($request->password);
+        }
+        $model->is_admin = 1;
+        $model->save();
+        return redirect()->route('admin.admins.index')->with('success', 'Admin updated successfully');
+    }
+    
+    public function destroy($id)
+    {
+        $model = User::where('is_admin', 1)->findOrFail($id);
+        $model->delete();
+        return redirect()->route('admin.admins.index')->with('success', 'Admin deleted successfully');
+    }
+    
     public function adminhome()
     {
         return view('admin.adminhome');

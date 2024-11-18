@@ -5,9 +5,9 @@
     <!-- Hero Section -->
     <section class="relative bg-white-800 text-white flex justify-end items-center h-screen">
         <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('backgroundhome.png');"></div>
-        <div class="relative z-10 bg-orange-100 bg-opacity-75 p-8 text-center w-1/2 h-1/2 mr-20 flex flex-col items-start rounded-xl">
+        <div class="relative z-10 bg-orange-100 bg-opacity-75 p-8 text-center w-1/2 h-1.5/4 mr-20 flex flex-col items-start rounded-xl">
             <h2 class="text-5xl mb-3 text-left font-bold w-2/3" style="color: #B88E2F;">Mencari barang-barang terkait peralatan jahit?</h2>
-            <a href="#" class="text-white px-6 py-4 rounded text-center w-1/6 h-1/10 mt-10 mb-10 rounded-none" style="background-color: #B88E2F;">Buy Now</a>
+            <a href="{{ route('shop') }}" class="text-white px-6 py-4 rounded text-center mt-10 mb-10 rounded-none" style="background-color: #B88E2F;">Buy Now</a>
         </div>
     </section>
 

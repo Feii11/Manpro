@@ -1,7 +1,9 @@
 <header class="bg-white shadow p-4">
     <div class="container mx-auto flex justify-between items-center">
         <div class="text-2xl font-bold">
-            MekarSari
+            <a href="{{ route('home') }}">
+                <img src="{{ asset('Mekarsari.png') }}" alt="Mekar Sari" width="150">
+            </a>
         </div>
 
         <nav class="space-x-8 text-lg">
@@ -48,10 +50,6 @@
 
             <a href="{{ route('orders.view') }}" class="text-2xl hover:text-gray-700">
                 <i class="fa-solid fa-clipboard"></i>
-            </a>
-
-            <a href="#" class="text-2xl hover:text-gray-700">
-                <i class="fas fa-heart"></i>
             </a>
 
             <a href="{{ route('cart.index') }}" class="text-2xl hover:text-gray-700">

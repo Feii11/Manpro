@@ -20,6 +20,28 @@ return new class extends Migration
             $table->integer('expiration');
         });
 
+        Schema::create('users', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name', 255)->nullable();
+            $table->string('email', 255)->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password', 255)->nullable();
+            $table->string('remember_token', 100)->nullable();
+            $table->timestamps();
+            $table->boolean('is_admin')->default(false);
+        });
+
+        Schema::create('produk', function (Blueprint $table) {
+            $table->increments('id_produk');
+            $table->string('nama_produk', 100)->nullable();
+            $table->string('merk', 100)->nullable();
+            $table->string('jenis', 100)->nullable();
+            $table->integer('harga')->nullable();
+            $table->string('image', 225)->nullable();
+            $table->unsignedBigInteger('no_comparison')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('carts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->nullable();
@@ -50,21 +72,9 @@ return new class extends Migration
             $table->string('email', 100)->nullable();
             $table->string('subject', 100)->nullable();
             $table->string('message', 1000)->nullable();
-            $table->unsignedInteger('id_customer');
+            $table->unsignedBigInteger('id_user');
 
-            $table->foreign('id_customer')->references('id_customer')->on('customer');
-        });
-
-        Schema::create('customer', function (Blueprint $table) {
-            $table->increments('id_customer');
-            $table->string('username', 20)->nullable();
-            $table->string('nama_customer', 225)->nullable();
-            $table->string('email', 100)->nullable();
-            $table->string('nomor_hp', 13)->nullable();
-            $table->string('jenis_akun', 10)->nullable();
-            $table->unsignedInteger('id_order')->nullable();
-
-            $table->foreign('id_order')->references('id_order')->on('order');
+            $table->foreign('id_user')->references('id')->on('users');
         });
 
         Schema::create('failed_jobs', function (Blueprint $table) {
@@ -111,12 +121,6 @@ return new class extends Migration
             $table->foreign('id_produk')->references('id_produk')->on('produk');
         });
 
-        Schema::create('migrations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('migration', 255);
-            $table->integer('batch');
-        });
-
         Schema::create('order', function (Blueprint $table) {
             $table->increments('id_order');
             $table->date('tanggal_order')->nullable();
@@ -128,6 +132,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user')->nullable();
             $table->timestamps();
             $table->text('payment_proof')->nullable();
+
+            $table->foreign('id_user')->references('id')->on('users'); 
         });
 
         Schema::create('order_produk', function (Blueprint $table) {
@@ -147,16 +153,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable();
         });
 
-        Schema::create('produk', function (Blueprint $table) {
-            $table->increments('id_produk');
-            $table->string('nama_produk', 100)->nullable();
-            $table->string('merk', 100)->nullable();
-            $table->string('jenis', 100)->nullable();
-            $table->integer('harga')->nullable();
-            $table->string('image', 225)->nullable();
-            $table->unsignedBigInteger('no_comparison')->nullable();
-            $table->timestamps();
-        });
+        
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id', 255)->primary();
@@ -170,16 +167,6 @@ return new class extends Migration
             $table->index('last_activity');
         });
 
-        Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name', 255)->nullable();
-            $table->string('email', 255)->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password', 255)->nullable();
-            $table->string('remember_token', 100)->nullable();
-            $table->timestamps();
-            $table->boolean('is_admin')->default(false);
-        });
     }
 
     public function down()
@@ -195,7 +182,6 @@ return new class extends Migration
         Schema::dropIfExists('job_batches');
         Schema::dropIfExists('jobs');
         Schema::dropIfExists('failed_jobs');
-        Schema::dropIfExists('customer');
         Schema::dropIfExists('contact');
         Schema::dropIfExists('comparison');
         Schema::dropIfExists('carts');

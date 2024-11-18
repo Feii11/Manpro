@@ -2,14 +2,12 @@
 
 @section('section')
 
-
-<!-- Breadcrumb -->
-<nav class="text-gray-600 text-sm my-6">
+<div class="container mx-auto py-12">
+    <nav class="text-gray-600 text-sm my-6">
         <a href="/home" class="text-gray-500 hover:text-gray-900">Home</a> >
         <span class="text-gray-900">About Us</span>
     </nav>
-
-<div class="container mx-auto py-12">
+    
     <!-- Hero Image Section -->
     <div class="relative bg-cover bg-center h-96" style="background-image: url('https://www.hawthornintl.com/wp-content/uploads/2018/11/Denim-Fabric.jpg');">
         <div class="absolute inset-0 bg-black opacity-50"></div>
@@ -23,7 +21,7 @@
         <h2 class="text-4xl font-bold mb-4">Who We Are</h2>
         <p class="text-gray-600 text-lg max-w-2xl mx-auto">
             Welcome to <strong>Mekarsari</strong>, where our mission is to provide top-tier fabrics and sewing accessories. 
-            Founded in the 2010's, we have always believed in delivering quality, unique products, and exceptional service
+            Founded in the 1990's, we have always believed in delivering quality, unique products, and exceptional service
             to our customers.
         </p>
     </section>

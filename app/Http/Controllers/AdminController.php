@@ -25,6 +25,25 @@ class AdminController extends Controller
         return view('admin.adminproductsedit', compact('product'));
     }
 
+    public function addProduct()
+    {
+        return view('admin.adminaddproduct');
+    }
+
+    public function storeProduct(Request $request)
+    {
+        $product = new Produk();
+        
+        $product->nama_produk = $request->name;
+        $product->harga = $request->price;
+        $product->merk = $request->merk;
+        $product->jenis = $request->jenis;
+        $product->image = $request->image_url;
+        
+        $product->save();
+        return redirect()->route('admin.products')->with('success', 'Product added successfully');
+    }
+
     public function updateProduct(Request $request, $id)
     {
         // dd($request->all()); // This will show all data being received
@@ -45,14 +64,14 @@ class AdminController extends Controller
 
     public function viewUsers()
     {
-        $users = User::where('jenis_akun', "user")->get();
-        return view('admin.adminuserslist', compact('users'));
+        $users = User::where('is_admin', 0)->get();
+        return view('admin.adminadminslist', compact('users'));
     }
 
     public function viewAdmins()
     {
         $admins = User::where('is_admin', 1)->get();
-        return view('admin.admins.index', compact('admins'));
+        return view('admin.adminadminslist', compact('admins'));
     }
 
     public function viewOrders()

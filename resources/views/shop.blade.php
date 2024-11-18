@@ -32,7 +32,7 @@
         <div class="flex items-center space-x-8"> <!-- Moved this inside the main flex container -->
             <div class="flex items-center space-x-2">
                 <label for="show" class="text-sm font-medium">Show</label>
-                <select id="show" class="mt-1 block py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
+                <select id="show" class="mt-1 block py-2 px-3 w-20 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
                     <option>All</option>
                     <!-- Add more options as needed -->
                 </select>
@@ -40,7 +40,7 @@
 
             <div class="flex items-center space-x-2">
                 <label for="sort" class="text-sm font-medium">Sort by</label>
-                <select id="sort" class="mt-1 block py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
+                <select id="sort" class="mt-1 block py-2 px-3 w-40 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
                     <option>Select option</option>
                     <!-- Add more options as needed -->
                 </select>

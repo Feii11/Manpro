@@ -2,16 +2,16 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="w-2/3 pr-4">
-                    <h5 class="font-bold text-3xl py-12">MekarSari</h5>
+                    <img src="{{ asset('Mekarsari.png') }}" alt="Mekar Sari" width="400">
                     <p class="text-gray-400">JL Teuku Umar No.9, Keprabon, Kec. Banjarsari, Kota Surakarta, Jawa Tengah 57131</p>
                 </div>
                 <div>
                     <h5 class="text-lg text-gray-400 py-12">Links</h5>
                     <ul class="space-y-6">
-                        <li><a href="#" class="hover:underline">Home</a></li>
-                        <li><a href="#" class="hover:underline">Shop</a></li>
-                        <li><a href="#" class="hover:underline">About</a></li>
-                        <li><a href="#" class="hover:underline">Contact</a></li>
+                        <li><a href="{{route('home')}}" class="hover:underline">Home</a></li>
+                        <li><a href="{{route('shop')}}" class="hover:underline">Shop</a></li>
+                        <li><a href="{{route('about')}}" class="hover:underline">About</a></li>
+                        <li><a href="{{route('contact')}}" class="hover:underline">Contact</a></li>
                     </ul>
                 </div>
                 <div>

@@ -10,7 +10,8 @@
 
     <div class="text-center text-black space-y-6">
         <!-- Title with some styling -->
-        <h1 class="text-6xl font-bold tracking-wide drop-shadow-lg">Mekarsari</h1>
+        <img src="{{ asset('Mekarsari.png') }}" alt="Mekar Sari" width="500">
+
 
         <!-- Buttons with styling -->
         <div class="space-x-4">

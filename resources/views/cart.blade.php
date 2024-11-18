@@ -67,12 +67,17 @@
         </div>
         <div class="flex justify-between mt-4 font-bold">
             <span>Total</span>
-            <span class="text-yellow-600">Rp. {{ number_format($cartItems->sum(function($item) {
+            <span class="text-yellow-500">Rp. {{ number_format($cartItems->sum(function($item) {
                 return $item->price * $item->quantity; // Calculate total cost
             }), 0, ',', '.') }}</span>
         </div>
         <a href="{{ route('checkout') }}">
-            <button class="mt-6 w-full bg-gray-800 text-white py-2 rounded">Check Out</button>
+            <button 
+                class="mt-6 w-full bg-yellow-500 text-white py-2 rounded {{ count($cartItems) === 0 ? 'opacity-50 cursor-not-allowed' : '' }}" 
+                {{ count($cartItems) === 0 ? 'disabled' : '' }}
+            >
+                Check Out
+            </button>
         </a>
     </div>
 </div>

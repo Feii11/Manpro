@@ -3,6 +3,18 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Dashboard') }}
         </h2>
+        <!-- Menambahkan tombol logout atau informasi pengguna -->
+        <div class="flex justify-end">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-md">
+                {{ __('User Profile') }}
+            </button>
+            <form method="POST" action="{{ route('logout') }}" class="ml-4">
+                @csrf
+                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md">
+                    {{ __('Logout') }}
+                </button>
+            </form>
+        </div>
     </x-slot>
 
     <div class="py-12">

@@ -1,6 +1,12 @@
 @extends('template.layout')
 @section('section')
 
+<!-- Meta Tags for SEO -->
+@section('meta')
+    <title>Contact Us - Your Company Name</title>
+    <meta name="description" content="Get in touch with us for more information about our products and services. We're here to help!">
+@endsection
+
 <div class="container mx-auto p-6">
     <!-- Title -->
     <h1 class="text-4xl font-bold text-center">Contact Us</h1>
@@ -8,8 +14,8 @@
 
     <!-- Contact Info -->
     <div class="flex justify-center items-center flex-col mt-8">
-        <h2 class="text-lg font-bold">Get In Touch With Us</h2>
-        <p class="text-center mt-2">For more information about our product & services, please feel free to drop us an email. Our staff always be there to help you out. Do not hesitate!</p>
+        <h2 class="text-xl font-bold">Get In Touch With Us</h2>
+        <p class="text-center mt-2">For more information about our products & services, please feel free to drop us an email. Our staff is always here to help you out. Do not hesitate!</p>
         <p class="mt-2"><strong>Address:</strong> Jl. Teuku Umar No.9, Keprabon, Kec. Banjarsari, Kota Surakarta, Jawa Tengah 57131</p>
         <p class="mt-2"><strong>Phone:</strong> + (0271) 642732</p>
         <p class="mt-2"><strong>Working Time:</strong> Monday-Saturday: 7:30 - 17:00</p>

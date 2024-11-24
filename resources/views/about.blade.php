@@ -1,9 +1,13 @@
 @extends('template.layout')
 
+@section('title', 'About Us - Mekarsari Fabric Store')
+@section('meta-description', 'Learn more about Mekarsari, a trusted provider of high-quality fabrics and sewing accessories. Explore our origin, mission, and future goals.')
+
 @section('section')
 
 <div class="container mx-auto py-12">
-    <nav class="text-gray-600 text-sm my-6">
+    <!-- Breadcrumbs -->
+    <nav class="text-gray-600 text-sm my-6" aria-label="Breadcrumb">
         <a href="/home" class="text-gray-500 hover:text-gray-900">Home</a> >
         <span class="text-gray-900">About Us</span>
     </nav>
@@ -29,7 +33,9 @@
     <!-- Origin Section with Image -->
     <section class="my-12 flex flex-col lg:flex-row items-center">
         <div class="lg:w-1/2 mb-8 lg:mb-0">
-            <img src="https://lh5.googleusercontent.com/p/AF1QipP3bQWvDXcPOxUUVbwYoy1C5jM_AFuTO4PfsjUk=w408-h541-k-no" alt="Our Origin" class="w-full rounded-lg shadow-lg">
+            <img src="https://lh5.googleusercontent.com/p/AF1QipP3bQWvDXcPOxUUVbwYoy1C5jM_AFuTO4PfsjUk=w408-h541-k-no" 
+                 alt="Mekarsari's Origin - Fabric Store in Solo, Indonesia" 
+                 class="w-full rounded-lg shadow-lg">
         </div>
         <div class="lg:w-1/2 lg:pl-12">
             <h2 class="text-3xl font-semibold mb-4">Our Origin</h2>
@@ -63,7 +69,9 @@
             </p>
         </div>
         <div class="lg:w-1/2">
-            <img src="https://img.freepik.com/premium-photo/silhouettes-people-standing-top-holding-hands-cheering-sunset-concept-symbolizes_1095814-10552.jpg" alt="Future Goals" class="w-full rounded-lg shadow-lg">
+            <img src="https://img.freepik.com/premium-photo/silhouettes-people-standing-top-holding-hands-cheering-sunset-concept-symbolizes_1095814-10552.jpg" 
+                 alt="Future Goals of Mekarsari Fabric Store" 
+                 class="w-full rounded-lg shadow-lg">
         </div>
     </section>
 
@@ -76,6 +84,5 @@
         <p class="text-gray-800 font-bold mt-4">Sincerely, Our Team at Mekarsari</p>
     </section>
 </div>
-
 
 @endsection

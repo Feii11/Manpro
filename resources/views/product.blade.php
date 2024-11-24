@@ -1,5 +1,8 @@
 @extends('template.layout')
 
+@section('title', 'Detail Produk - ' . $produk->nama_produk)
+@section('meta-description', 'Lihat detail produk: ' . $produk->nama_produk . ', harga, spesifikasi, dan cara membeli.')
+
 @section('section')
 
 <div class="container mx-auto py-8">
@@ -15,7 +18,7 @@
     <div class="flex flex-col lg:flex-row lg:space-x-12">
         <!-- Product Images -->
         <div class="lg:w-1/2">
-            <img src="{{ $produk->image }}" alt="{{ $produk->nama_produk }}" class="w-full rounded-lg shadow-lg mb-4">
+            <img src="{{ $produk->image }}" alt="{{ $produk->nama_produk }}" class="w-full rounded-lg shadow-lg mb-4" loading="lazy">
         </div>
 
         <!-- Product Details -->
@@ -40,41 +43,41 @@
                 @csrf
 
                 <div class="flex items-center space-x-4 mb-4">
-                    <div>
+                    <div class="w-1/2">
                         <label for="merk" class="block text-sm font-medium">Merk:</label>
-                        <select id="merk" name="merk" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
+                        <select id="merk" name="merk" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="merkHelp">
                             <option value="">Pilih...</option>
                             @foreach($produkByMerk as $merk => $listJenis)
-                                <option value="{{ $merk }}">
-                                    {{ $merk }}
-                                </option>
+                                <option value="{{ $merk }}">{{ $merk }}</option>
                             @endforeach
                         </select>
+                        <small id="merkHelp" class="text-gray-500">Pilih merk produk yang tersedia.</small>
                     </div>
 
-                    <div>
+                    <div class="w-1/2">
                         <label for="jenis" class="block text-sm font-medium">Jenis:</label>
-                        <select id="jenis" name="jenis" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none">
+                        <select id="jenis" name="jenis" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="jenisHelp">
                         </select>
+                        <small id="jenisHelp" class="text-gray-500">Pilih jenis produk sesuai merk.</small>
                     </div>
                 </div>
 
-                <!-- Add to Cart Button -->
-                <!-- Hidden input to pass the product ID and quantity -->
+                <!-- Hidden inputs to pass product ID and quantity -->
                 <input type="hidden" name="product_id" value="{{ $produk->id_produk }}">
                 <input type="hidden" id="productQuantity" name="quantity" value="1">
                 
                 <!-- Quantity Input -->
                 <div class="flex items-center mb-6">
-                    <input type="number" id="quantity" name="quantity" value="1" min="1" class="w-16 border text-center">
+                    <label for="quantity" class="sr-only">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" class="w-16 border text-center rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 
                 <!-- Submit Button -->
-                <button type="submit" class="mt-4 py-2 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Add to Cart</button>
+                <button type="submit" class="mt-4 py-2 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Add to Cart</button>
                 
                 @if ($errors->any())
-                    <div class="mt-2 bg-red-500 text-sm text-white rounded-lg p-4" role="alert" tabindex="-1" aria-labelledby="hs-solid-color-danger-label">
-                        <span id="hs-solid-color-danger-label" class="font-bold">Error</span>
+                    <div class="mt-2 bg-red-500 text-sm text-white rounded-lg p-4" role="alert" aria-live="assertive">
+                        <span class="font-bold">Error</span>
                         <ul>
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -82,7 +85,6 @@
                         </ul>
                     </div>
                 @endif
-
             </form>
 
             <!-- Product Description -->
@@ -128,22 +130,19 @@
             $('#productQuantity').val(quantity);
         });
 
-        $('#merk').on('change', function(e) {
-            const merk = $('#merk').val();
-
+        $('#merk').on('change', function() {
+            const merk = $(this).val();
             $('#jenis').html('');
 
-            if (merk == "") return;
+            if (!merk) return;
 
             const jenisForMerk = produkByMerk[merk];
-    
+
             for (const x of jenisForMerk) {
                 $('#jenis').append(`
                     <option value="${x.jenis}">${x.jenis}</option>
-                `)
+                `);
             }
         });
     });
-
-
 </script>

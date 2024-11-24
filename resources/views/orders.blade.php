@@ -1,4 +1,8 @@
 @extends('template.layout')
+
+@section('title', 'Ongoing Orders - Toko Mekar Sari')
+@section('meta-description', 'Lihat daftar pesanan yang sedang berlangsung di Toko Mekar Sari. Temukan status, metode pembayaran, dan detail produk yang dipesan.')
+
 @section('section')
 
 <body class="bg-gray-100">
@@ -27,16 +31,11 @@
                         <td class="p-3">{{ $order->id_order }}</td>
                         <td class="p-3">{{ $order->tanggal_order }}</td>
                         <td class="p-3">Rp. {{ number_format($order->jumlah_bayar, 0, ',', '.') }}</td>
-                        <!-- @if ($order->status_order == 'Pending')
-        <a href="{{ route('payment.show', ['order' => $order->id_order]) }}" class="text-blue-500 hover:underline">Pay Now</a>
-    @else
-        {{ $order->metode_pembayaran }}
-    @endif -->
                         <td class="p-3">{{ $order->status_order }}</td>
                         <td class="p-3">
-                        {{ $order->metode_pembayaran }}  
-                        @if ($order->status_order == 'waiting for payment') 
-                            <a href="{{ route('payment.show', ['order' => $order->id_order]) }}" class="text-blue-500 hover:underline">Pay Now</a>
+                            {{ $order->metode_pembayaran }}  
+                            @if ($order->status_order == 'waiting for payment') 
+                                <a href="{{ route('payment.show', ['order' => $order->id_order]) }}" class="text-blue-500 hover:underline">Pay Now</a>
                             @endif
                         </td>
                         <td class="p-3">
@@ -61,5 +60,7 @@
         </div>
     @endif
 </div>
+
+</body>
 
 @endsection

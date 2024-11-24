@@ -1,48 +1,47 @@
 @extends('template.layoutadmin')
 
 @section('section')
-<div class="container mx-auto mb-6">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Manage Products</h1>
-        <a href="{{route('admin.product.add')}}">
-            <button class="w-40 bg-yellow-500 text-white py-2 rounded 'opacity-50 cursor-not-allowed' : '' }}">Add Product</button>
-        </a>
+<div class="container px-4 py-8 mx-auto">
+    <div class="mx-auto max-w-7xl">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Manage Products</h1>
+            <a href="{{ route('admin.product.add') }}" class="px-4 py-2 text-sm text-white bg-yellow-500 rounded-md hover:bg-yellow-600">
+                Add Product
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg">
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 border-b">Product Name</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 border-b">Price</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 border-b">Merk</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 border-b">Jenis</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 border-b">Image URL</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 border-b">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($products as $product)
+                        <tr>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ $product->nama_produk }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">Rp. {{ number_format($product->harga, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ $product->merk }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ $product->jenis }}</td>
+                            <td class="px-6 py-4 text-sm">
+                                <a href="{{ $product->image }}" class="text-blue-500 hover:underline" target="_blank">View Image</a>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <a href="{{ route('admin.product.edit', $product->id_produk) }}" class="px-2 py-1 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600">Edit</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    
-
-    <div class="mb-10">
-        <table class="min-w-full bg-white border">
-            <thead>
-                <tr>
-                    <th class="py-2 px-2 border">Product Name</th>
-                    <th class="py-2 px-2 border">Price</th>
-                    <th class="py-2 px-2 border">Merk</th>
-                    <th class="py-2 px-2 border">Jenis</th>
-                    <th class="py-2 px-2 border">Image URL</th>
-                    <th class="py-2 px-2 border">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($products as $product)
-                <tr>
-                    <td class="py-2 px-2 border">{{ $product->nama_produk }}</td>
-                    <td class="py-2 px-2 border">Rp. {{ number_format($product->harga, 0, ',', '.') }}</td>
-                    <td class="py-2 px-2 border">{{ $product->merk }}</td>
-                    <td class="py-2 px-2 border">{{ $product->jenis }}</td>
-                    <td class="py-2 px-2 border"><a href="{{ $product->image }}" class="text-blue-500 hover:underline" target="_blank">View Image</a></td>
-                    <td class="py-2 px-2 border">
-                        <a href="{{ route('admin.product.edit', $product->id_produk) }}" class="text-blue-500 hover:underline">Edit</a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    
 </div>
-    
-<div>
-
-</div>
-
 @endsection

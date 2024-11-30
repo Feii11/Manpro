@@ -9,26 +9,57 @@ class ProdukController extends Controller
 {
 
     public function index(Request $request)
-    {
-        $search = $request->search;
-        $page = $request->page ?? 1;
-        $page_size = 10;
-        
-        if (empty($search)) {
-            $allProducts = Produk::all();
-            $uniqueProducts = $allProducts->unique('nama_produk');
-        } else {
-            $uniqueProducts = Produk::where('nama_produk', 'like', '%' . $search . '%')
-                            ->get()
-                            ->unique('nama_produk');
-        }
+{
+    $search = $request->search;
+    $page = $request->page ?? 1;
+    $page_size = 10;
 
-        $totalPages = ceil(count($uniqueProducts) / $page_size);
-        $paginatedProducts = $uniqueProducts->forPage($page, $page_size);
+    // Base query
+    $query = Produk::query();
 
-        return view('homepage', ['produk' => $paginatedProducts, 'totalPages' => $totalPages]);
+    // Apply search filter
+    if (!empty($search)) {
+        $query->where('nama_produk', 'like', '%' . $search . '%');
     }
-    
+
+    // Apply minimum price filter
+    if ($minPrice = $request->input('min_price')) {
+        $query->where('harga', '>=', $minPrice);
+    }
+
+    // Apply maximum price filter
+    if ($maxPrice = $request->input('max_price')) {
+        $query->where('harga', '<=', $maxPrice);
+    }
+
+    // Apply sorting
+    if ($sort = $request->input('sort')) {
+        if ($sort === 'price_asc') {
+            $query->orderBy('harga', 'asc');
+        } elseif ($sort === 'price_desc') {
+            $query->orderBy('harga', 'desc');
+        }
+    }
+
+    // Execute the query and get unique products
+    $allProducts = $query->get();
+    $uniqueProducts = $allProducts->unique('nama_produk');
+
+    // Manual pagination
+    $totalPages = ceil($uniqueProducts->count() / $page_size);
+    $paginatedProducts = $uniqueProducts->forPage($page, $page_size);
+
+    // Return the view with the filtered, sorted, and paginated data
+    return view('homepage', [
+        'produk' => $paginatedProducts,
+        'totalPages' => $totalPages,
+        'search' => $search,
+        'minPrice' => $minPrice,
+        'maxPrice' => $maxPrice,
+        'sort' => $sort,
+    ]);
+}
+
 
     public function shop()
     {
@@ -52,7 +83,7 @@ class ProdukController extends Controller
         $produkByMerk = Produk::query()
             ->where('nama_produk', $produk->nama_produk)
             ->get()
-            ->map(fn($item) => ['merk' => $item->merk, 'jenis' => $item->jenis])
+            ->map(fn($item) => ['merk' => $item->merk, 'jenis' => $item->jenis, 'harga' => $item->harga])
             ->groupBy(fn($item) => $item['merk']);
 
         // Pass the product, merk, and jenis to the view
@@ -83,8 +114,43 @@ class ProdukController extends Controller
             // Include any other product details you need
         ]);
     }
-    
-    
 
+    public function indexx(Request $request)
+    {
+        // Base query
+        $query = Produk::query();
+
+        // Handle search
+        if ($search = $request->input('search')) {
+            $query->where('nama_produk', 'like', '%' . $search . '%');
+        }
+
+        // Handle price range filter
+        if ($minPrice = $request->input('min_price')) {
+            $query->where('harga', '>=', $minPrice);
+        }
+
+        if ($maxPrice = $request->input('max_price')) {
+            $query->where('harga', '<=', $maxPrice);
+        }
+
+        // Handle sorting
+        if ($sort = $request->input('sort')) {
+            if ($sort === 'price_asc') {
+                $query->orderBy('harga', 'asc');
+            } elseif ($sort === 'price_desc') {
+                $query->orderBy('harga', 'desc');
+            }
+        }
+
+        // Paginate results
+        $produk = $query->paginate(12)->withQueryString();
+
+        return view('home', [
+            'produk' => $produk,
+            'totalPages' => $produk->lastPage(),
+        ]);
+    }
+    
 
 }

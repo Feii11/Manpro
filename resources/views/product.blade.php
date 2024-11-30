@@ -86,34 +86,7 @@
                     </div>
                 @endif
             </form>
-
-            <!-- Product Description -->
-            <h2 class="text-xl font-semibold mb-2">Product Description</h2>
-            <p class="text-gray-600 mb-6">
-                - This is a sample product description that provides information about the product's features and specifications.
-            </p>
         </div>
-    </div>
-
-    <!-- Additional Information -->
-    <div class="mt-12">
-        <h2 class="text-2xl font-bold mb-4">Additional Information</h2>
-        <table class="table-auto w-full text-left text-gray-600">
-            <tbody>
-                <tr>
-                    <th class="py-2">Material</th>
-                    <td class="py-2">Cotton</td> <!-- Placeholder material -->
-                </tr>
-                <tr>
-                    <th class="py-2">Weight</th>
-                    <td class="py-2">200g</td> <!-- Placeholder weight -->
-                </tr>
-                <tr>
-                    <th class="py-2">Dimensions</th>
-                    <td class="py-2">10 x 10 x 10 cm</td> <!-- Placeholder dimensions -->
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 
@@ -124,6 +97,7 @@
     const produkByMerk = @json($produkByMerk);
     
     $(document).ready(function() {
+        const $priceElement = $('#product-price');
         // Update the form's quantity value when the user changes the quantity input field
         $('#quantity').on('input', function() {
             var quantity = $(this).val();
@@ -140,9 +114,21 @@
 
             for (const x of jenisForMerk) {
                 $('#jenis').append(`
-                    <option value="${x.jenis}">${x.jenis}</option>
+                    <option value="${x.jenis}" data-price="${x.harga}">${x.jenis}</option>
                 `);
             }
+
+            const firstJenis = $('#jenis option').first();
+            const price = firstJenis.data('price');
+            $('#jenis').val(firstJenis.val()); // Set the first jenis as selected
+            $priceElement.text(`Rp. ${new Intl.NumberFormat('id-ID').format(price)}`); 
+
+        });
+
+        $('#jenis').on('change', function() {
+            const selectedOption = $(this).find(':selected');
+            const price = selectedOption.data('price');
+            $priceElement.text(`Rp. ${new Intl.NumberFormat('id-ID').format(price)}`);
         });
     });
 </script>

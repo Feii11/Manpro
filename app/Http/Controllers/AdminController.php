@@ -65,7 +65,7 @@ class AdminController extends Controller
 
     public function viewProducts()
     {
-        $products = Produk::all();
+        $products = Produk::orderBy('nama_produk', 'asc')->get();
         return view('admin.adminproductslist', compact('products'));
     }
 
@@ -73,6 +73,13 @@ class AdminController extends Controller
     {
         $product = Produk::findOrFail($id);
         return view('admin.adminproductsedit', compact('product'));
+    }
+    
+    public function deleteProduct($id)
+    {
+        $product = Produk::findOrFail($id);
+        $product->delete();
+        return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
     }
 
     public function addProduct()
@@ -82,9 +89,14 @@ class AdminController extends Controller
 
     public function storeProduct(Request $request)
     {
-        $product = new Produk();
+        if ($request->isNewProduct === "true") {
+            $product_name = $request->new_product_name;
+        } else {
+            $product_name = $request->existing_product_name;
+        }
         
-        $product->nama_produk = $request->name;
+        $product = new Produk();
+        $product->nama_produk = $product_name;
         $product->harga = $request->price;
         $product->merk = $request->merk;
         $product->jenis = $request->jenis;

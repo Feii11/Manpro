@@ -6,29 +6,21 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthenticateAdmin;
+use App\Http\Middleware\MustNotBeAdmin;
 use App\Http\Middleware\AuthenticateUser;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('home');
-    }
-    return view('welcome');
+// Public Routes (No Authentication Required)
+Route::middleware([MustNotBeAdmin::class])->group(function () {
+    Route::get('/', [ProdukController::class, 'index'])->name('home');
+    Route::get('/shop', [ProdukController::class, 'shop'])->name('shop');
+    Route::get('/shop/{id}', [ProdukController::class, 'show'])->name('produk.show');
+    Route::get('/about', function () {return view('about');})->name('about');
+    Route::get('/contact', function () {return view('contact');})->name('contact');
 });
 
-// Public Routes (No Authentication Required)
-Route::get('/home', [ProdukController::class, 'index'])->name('home');
-Route::get('/shop', [ProdukController::class, 'shop'])->name('shop');
-Route::get('/shop/{id}', [ProdukController::class, 'show'])->name('produk.show');
-Route::get('/about', function () {return view('about');})->name('about');
-Route::get('/contact', function () {return view('contact');})->name('contact');
-// Route for AJAX request to get product by filters
-Route::get('/product/filter', [ProdukController::class, 'getProductByFilters'])->name('product.getProductByFilters');
-
-
 // Routes that require authentication
-Route::middleware([AuthenticateUser::class])->group(function () {
+Route::middleware([MustNotBeAdmin::class, AuthenticateUser::class])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -49,7 +41,7 @@ Route::middleware([AuthenticateUser::class])->group(function () {
 
 // Admin Routes (For Admin Users Only)
 Route::prefix('admin')->name('admin.')->middleware([AuthenticateAdmin::class])->group(function () {
-    Route::get('/', [AdminController::class, 'adminhome'])->name('home');
+    Route::get('/', [AdminController::class, 'adminhome'])->name('index');
     Route::get('/products', action: [AdminController::class, 'viewProducts'])->name('products');
     Route::get('/admins', [AdminController::class, 'viewAdmins'])->name('admins');
     Route::get('/orders', [AdminController::class, 'viewOrders'])->name('orders');
@@ -68,6 +60,7 @@ Route::prefix('admin')->name('admin.')->middleware([AuthenticateAdmin::class])->
     Route::post('/product/add', [AdminController::class, 'storeProduct'])->name('product.store');
     Route::get('/product/{id}/edit', [AdminController::class, 'editProduct'])->name('product.edit');
     Route::post('/product/{id}/update', [AdminController::class, 'updateProduct'])->name('product.update');
+    Route::delete('/product/{id}/delete', [AdminController::class, 'deleteProduct'])->name('product.delete');
     // Route::get('/admin/order/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.order.status');
     Route::post('/order/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('order.status');
 });

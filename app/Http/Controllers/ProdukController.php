@@ -8,16 +8,25 @@ use Illuminate\Http\Request;
 class ProdukController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        // Fetch all products from the 'produk' table
-        $allProducts = Produk::all();
-    
-        // Filter unique products by 'nama_produk'
-        $uniqueProducts = $allProducts->unique('nama_produk');
-    
-        // Pass the unique products to the view
-        return view('homepage', ['produk' => $uniqueProducts]);
+        $search = $request->search;
+        $page = $request->page ?? 1;
+        $page_size = 10;
+        
+        if (empty($search)) {
+            $allProducts = Produk::all();
+            $uniqueProducts = $allProducts->unique('nama_produk');
+        } else {
+            $uniqueProducts = Produk::where('nama_produk', 'like', '%' . $search . '%')
+                            ->get()
+                            ->unique('nama_produk');
+        }
+
+        $totalPages = ceil(count($uniqueProducts) / $page_size);
+        $paginatedProducts = $uniqueProducts->forPage($page, $page_size);
+
+        return view('homepage', ['produk' => $paginatedProducts, 'totalPages' => $totalPages]);
     }
     
 

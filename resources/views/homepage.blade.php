@@ -7,35 +7,111 @@
 @section('meta-description', 'Temukan peralatan jahit dan barang-barang berkualitas di Toko Mekar Sari. Beli sekarang untuk produk terbaik dan harga terjangkau!')
 
 <!-- Hero Section -->
-<section class="relative bg-white-800 text-white flex justify-end items-center h-screen">
-    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('backgroundhome.png');"></div>
-    <div class="relative z-10 bg-orange-100 bg-opacity-75 p-8 text-center w-1/2 h-1.5/4 mr-20 flex flex-col items-start rounded-xl">
-        <h1 class="text-5xl mb-3 text-left font-bold w-2/3" style="color: #B88E2F;">Mencari barang-barang terkait peralatan jahit?</h1>
-        <a href="{{ route('shop') }}" class="text-white px-6 py-4 text-center mt-10 mb-10 rounded-none" style="background-color: #B88E2F;">Buy Now</a>
+<section class="flex items-center justify-center text-white h-[300px] bg-white-800" 
+    style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('backgroundhome.png'); background-size: cover; background-attachment: fixed; position: relative;">
+    <h1 class="w-2/3 text-4xl font-bold text-center text-white">Mencari barang-barang terkait peralatan jahit?</h1>
+</section>
+
+<!-- Filter Section -->
+<section class="py-2 text-black bg-orange-100"> 
+    <div class="container flex items-center justify-between w-11/12 mx-auto sm:w-6/12">
+        <div class="flex items-center space-x-2"> 
+            <i class="text-2xl fa-solid fa-sliders"></i>
+            <p class="text-2xl">Filter</p>
+        </div>
+        
+        <div class="flex items-center space-x-8"> 
+            <div class="flex items-center space-x-2">
+                <label for="sort" class="text-sm font-medium">Sort by</label>
+                <select id="sort" class="block w-40 px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none">
+                    <option>Select option</option>
+                </select>
+            </div>
+        </div>
     </div>
 </section>
 
 <!-- Products Section -->
-<section class="py-12">
-    <div class="container mx-auto px-4">
-        <p class="text-center text-lg mb-4">Toko kami memiliki banyak barang terkait pakaian dengan kualitas terbaik.</p>
-        <h2 class="text-center text-2xl font-bold mb-8">Ada apa saja?</h2>
-        <div class="grid grid-cols-2 gap-6">
-            @foreach ($produk as $product)
-                <div class="text-center">
-                    <img src="{{ $product['image'] }}" alt="{{ $product['nama_produk'] }} - Peralatan Jahit Berkualitas" class="mx-auto w-full h-64 object-cover">
-                    <h3 class="mt-4 text-lg font-semibold">{{ $product['nama_produk'] }}</h3>
-                </div>
-            @endforeach
+<section class="w-11/12 mx-auto sm:w-6/12">
+    <form action="{{ route('home') }}" method="GET" class="flex items-center mx-auto mt-4 mb-4">
+        <div class="relative flex-1">
+            <input type="text" id="search" class="block w-full px-3 py-2 bg-white border border-gray-300 shadow-sm rounded-l-md focus:outline-none" placeholder="Search..." value="{{ request('search') }}" name="search">
+            @if(request('search'))
+                <a href="{{ route('home') }}" class="absolute text-gray-400 -translate-y-1/2 right-2 top-1/2 hover:text-gray-600">
+                    <i class="fa-solid fa-times"></i>
+                </a>
+            @endif
         </div>
+        <button type="submit" class="px-4 py-2 text-white bg-blue-500 border border-blue-500 shadow-sm rounded-r-md">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </form>
+</section>
+
+<section class="w-11/12 mx-auto mb-5 bg-white sm:w-6/12">
+    <div class="mx-auto">
+        @if ($produk->count() > 0)
+            <div class="grid w-full grid-cols-2 gap-6 sm:grid-cols-4">
+                @foreach($produk as $item)
+                <a href="{{ route('produk.show', $item->id_produk) }}">
+                    <div class="w-full overflow-hidden bg-gray-200 border rounded-md h-[250px]">
+                        <img src="{{ $item->image }}" alt="{{ $item->nama_produk }}" class="object-cover object-center w-full h-full">
+                    </div>
+                    <div class="flex justify-between mt-4">
+                        <div>
+                            <h3 class="text-sm text-gray-700">
+                                <span aria-hidden="true" class="inset-0"></span>
+                                {{ $item->nama_produk }}
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-500">{{ $item->ukuran }}</p>
+                        </div>
+                        <p class="text-sm font-medium text-gray-900">Rp. {{ number_format($item->harga, 0, ',', '.') }}</p>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        @else
+            <div class="flex items-center justify-center h-40 text-center text-gray-700 rounded-md">
+                No products found
+            </div>
+        @endif
+        
+        @if($totalPages > 1)
+            <div class="flex justify-center gap-2 mt-8">
+                @php
+                    $currentPage = request('page', 1);
+                    $start = max(1, $currentPage - 2);
+                    $end = min($totalPages, $currentPage + 2);
+                @endphp
+
+                @if($currentPage > 1)
+                    <a href="{{ route('home', ['page' => $currentPage - 1, 'search' => request('search')]) }}" class="px-3 py-1 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                        Previous
+                    </a>
+                @endif
+
+                @for($i = $start; $i <= $end; $i++)
+                    <a href="{{ route('home', ['page' => $i, 'search' => request('search')]) }}" 
+                       class="px-3 py-1 text-sm {{ $i == $currentPage ? 'bg-blue-500 text-white' : 'text-gray-700 bg-white hover:bg-gray-50' }} border border-gray-300 rounded-md">
+                        {{ $i }}
+                    </a>
+                @endfor
+
+                @if($currentPage < $totalPages)
+                    <a href="{{ route('home', ['page' => $currentPage + 1, 'search' => request('search')]) }}" class="px-3 py-1 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                        Next
+                    </a>
+                @endif
+            </div>
+        @endif
     </div>
 </section>
 
 <!-- Banner Section -->
 <section class="relative bg-orange-100 h-[53rem]">
-    <div class="container mx-auto text-center relative z-10 pt-16">
-        <h2 class="text-xl mb-3">Carilah keperluanmu dengan</h2>
-        <h3 class="text-3xl mb-1 font-bold">#TokoMekarSari</h3>
+    <div class="container relative z-10 pt-16 mx-auto text-center">
+        <h2 class="mb-3 text-xl">Carilah keperluanmu dengan</h2>
+        <h3 class="mb-1 text-3xl font-bold">#TokoMekarSari</h3>
     </div>
     <div class="absolute w-full h-[48rem] bg-contain bg-no-repeat bg-center z-0" style="background-image: url('backgroundhome2.PNG'); top: 5rem;"></div>
 </section>

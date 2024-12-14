@@ -21,9 +21,12 @@ Route::middleware([MustNotBeAdmin::class])->group(function () {
 
 // Routes that require authentication
 Route::middleware([MustNotBeAdmin::class, AuthenticateUser::class])->group(function () {
+    // Route to display the user's profile
+Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile.show');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

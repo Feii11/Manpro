@@ -13,21 +13,37 @@
 </section>
 
 <!-- Filter Section -->
-<section class="py-2 text-black bg-orange-100"> 
+<section class="py-2 text-black bg-orange-100">
     <div class="container flex items-center justify-between w-11/12 mx-auto sm:w-6/12">
-        <div class="flex items-center space-x-2"> 
-            <i class="text-2xl fa-solid fa-sliders"></i>
-            <p class="text-2xl">Filter</p>
+        <div class="flex items-center space-x-2">
+         
         </div>
-        
-        <div class="flex items-center space-x-8"> 
+
+        <form action="{{ route('home') }}" method="GET" class="flex items-center space-x-4">
+            <!-- Sort by -->
             <div class="flex items-center space-x-2">
                 <label for="sort" class="text-sm font-medium">Sort by</label>
-                <select id="sort" class="block w-40 px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none">
-                    <option>Select option</option>
+                <select id="sort" name="sort" class="block w-40 px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none">
+                    <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Default</option>
+                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
                 </select>
             </div>
-        </div>
+
+            <!-- Price Range -->
+            <div class="flex items-center space-x-2">
+                <label for="min_price" class="text-sm font-medium">Min Price</label>
+                <input type="number" id="min_price" name="min_price" value="{{ request('min_price') }}" class="block w-20 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none">
+            </div>
+            <div class="flex items-center space-x-2">
+                <label for="max_price" class="text-sm font-medium">Max Price</label>
+                <input type="number" id="max_price" name="max_price" value="{{ request('max_price') }}" class="block w-20 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none">
+            </div>
+
+            <button type="submit" class="px-4 py-2 text-white bg-blue-500 border border-blue-500 shadow-sm rounded-md">
+                Apply
+            </button>
+        </form>
     </div>
 </section>
 

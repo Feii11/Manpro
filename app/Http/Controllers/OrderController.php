@@ -5,6 +5,7 @@ use App\Models\Order;
 use App\Models\Cart;
 use App\Models\OrderProduk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -91,7 +92,11 @@ public function submitPaymentProof(Request $request, $orderId)
     // Check if a payment proof file has been uploaded
     if ($request->hasFile('payment_proof')) {
         // Store the uploaded image in the 'payment_proofs' directory and get the file path
-        $filename = $request->file('payment_proof')->store('payment_proofs', 'public');
+        $file = $request->file('payment_proof');
+        $destinationPath = public_path('payment_proofs'); // Folder tujuan
+        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension(); // Nama file unik
+        $file->move($destinationPath, $filename);
+
         
         // Update the order with the file path and change the order status
         $order->payment_proof = $filename;

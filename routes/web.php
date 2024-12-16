@@ -62,6 +62,7 @@ Route::prefix('admin')->name('admin.')->middleware([AuthenticateAdmin::class])->
     Route::get('/product/add', [AdminController::class, 'addProduct'])->name('product.add');
     Route::post('/product/add', [AdminController::class, 'storeProduct'])->name('product.store');
     Route::get('/product/{id}/edit', [AdminController::class, 'editProduct'])->name('product.edit');
+    Route::patch('/product/{id}/update-stock', [AdminController::class, 'updateStock'])->name('product.update-stock');
     Route::post('/product/{id}/update', [AdminController::class, 'updateProduct'])->name('product.update');
     Route::delete('/product/{id}/delete', [AdminController::class, 'deleteProduct'])->name('product.delete');
     // Route::get('/admin/order/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.order.status');

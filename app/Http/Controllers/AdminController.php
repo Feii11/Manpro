@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -101,6 +102,7 @@ class AdminController extends Controller
         $product->merk = $request->merk;
         $product->jenis = $request->jenis;
         $product->image = $request->image_url;
+        $product->stok = $request->stok;
         
         $product->save();
         return redirect()->route('admin.products')->with('success', 'Product added successfully');
@@ -108,7 +110,6 @@ class AdminController extends Controller
 
     public function updateProduct(Request $request, $id)
     {
-        // dd($request->all()); // This will show all data being received
         $product = Produk::findOrFail($id);
 
         $product->nama_produk = $request->input('name');
@@ -116,6 +117,7 @@ class AdminController extends Controller
         $product->merk = $request->input('merk');
         $product->jenis = $request->input('jenis');
         $product->image = $request->input('image_url');
+        $product->stok = $request->stok;
 
         // Save the updated product
         $product->save();
@@ -150,5 +152,24 @@ class AdminController extends Controller
         $order->save();
 
         return redirect()->route('admin.orders')->with('success', 'Order status updated successfully');
+    }
+    
+    public function updateStock(Request $request, $id) 
+    {
+        $validator = Validator::make($request->all(), [
+            'stok' => 'required',
+        ]);
+        
+        if (!$validator->valid()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ]);
+        }
+        
+        $product = Produk::findOrFail($id);
+        $product->stok = $request->stok;
+        $product->save();
+        
+        return response()->json();
     }
 }

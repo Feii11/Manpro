@@ -15,4 +15,5 @@
 @include('base.headeradmin')
 @yield('section')
 </body>
+@yield('scripts')
 </html>

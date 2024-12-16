@@ -51,7 +51,7 @@
                             <!-- Display Payment Proof if Submitted -->
                             <td class="px-6 py-4 text-sm">
                                 @if($order->payment_proof)
-                                    <a href="{{ asset('storage/' . $order->payment_proof) }}" 
+                                    <a href="{{ asset('payment_proofs/' . $order->payment_proof) }}" 
                                        target="_blank" class="text-blue-500 hover:underline">View Payment Proof</a>
                                 @else
                                     <span class="text-gray-500">No proof submitted</span>
